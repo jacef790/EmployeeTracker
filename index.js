@@ -1,7 +1,8 @@
 // get the client
 const mysql = require('mysql2');
 const inquirer = require('inquirer');
-const { init } = require('express/lib/application');
+// const { init } = require('express/lib/application');
+const { response } = require('express');
 
 // create the connection to database
 const connection = mysql.createConnection({
@@ -23,6 +24,38 @@ const menu = {
 
 }
 
-
+const init = () => {
+    inquirer
+    .prompt(menu)
+    .then((response) => {
+        switch (response.menu){
+            case 'view all departments':
+                departments();
+                break;
+            case 'view all roles':
+                roles();
+                break;
+            case 'view all employees':
+                employees();
+                break;
+            case 'add a department':
+                addDepartment();
+                break;
+            case 'add a role':
+                addRoles();
+                break;
+            case 'add an employee':
+                addEmployee();
+                break;
+            case 'update an employee role':
+                updateRoles();
+                break;
+            case 'quit':
+                process.exit();
+                
+                
+        }
+    })
+}
 
 init();
