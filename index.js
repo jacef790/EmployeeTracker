@@ -130,7 +130,17 @@ const employees = () => {
 
 const addDepartment = () => {
   inquirer.prompt(departmentPrompt)
-  const sql = "INSERT INTO department";
+  .then((response) => {
+    newDept(response);
+  })
+  const newDept = (data) => {
+    const {newDepartment} = data;
+    const param = [newDepartment]
+    const sql = 'INSERT INTO department (name) VALUES (?)';
+    db.promise().query(sql, param)
+    .then(console.log(`${newDepartment} added to database`));
+    
+  }
 };
 
 init();
