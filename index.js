@@ -98,7 +98,9 @@ const departments = () => {
     .then(([rows, fields]) => {
       const table = consoleTable.getTable(rows);
       console.log(table);
+      startMenu();
     });
+    
 };
 
 // view roles in table
@@ -111,10 +113,12 @@ const roles = () => {
     .then(([rows, fields]) => {
       const table = consoleTable.getTable(rows);
       console.log(table);
+      startMenu();
     });
-
-  // view employees in table
 };
+
+// view employees in table
+
 const employees = () => {
   const sql = "SELECT * FROM employee";
 
@@ -123,6 +127,7 @@ const employees = () => {
     .then(([rows, fields]) => {
       const table = consoleTable.getTable(rows);
       console.log(table);
+      startMenu();
     });
 };
 
@@ -135,11 +140,11 @@ const addDepartment = () => {
   })
   const newDept = (data) => {
     const {newDepartment} = data;
-    const param = [newDepartment]
+    const addDept = [newDepartment]
     const sql = 'INSERT INTO department (name) VALUES (?)';
-    db.promise().query(sql, param)
+    db.promise().query(sql, addDept)
     .then(console.log(`${newDepartment} added to database`));
-    
+    startMenu();
   }
 };
 
