@@ -5,6 +5,8 @@ const consoleTable = require("console.table");
 const mysql = require("mysql2");
 const { response } = require("express");
 const { restoreDefaultPrompts } = require("inquirer");
+const res = require("express/lib/response");
+// const Connection = require("mysql2/typings/mysql/lib/Connection");
 
 // create the connection to database
 const db = mysql.createConnection(
@@ -86,6 +88,29 @@ const departmentPrompt = {
 };
 
 
+//add role prompt
+
+const rolePrompt = [{
+  type: 'input',
+  message: 'Name of new role?',
+  name: 'newRole'
+
+},
+{
+  type: 'number',
+  message: 'Salary of new role?',
+  name: 'newSalary'
+},
+{
+  type: 'input',
+  message: 'What department does this role belong to?',
+  // choices: ['Management', 'Engineering', 'Sales'],
+  name: 'newDepartment_id'
+}];
+
+//add employee prompt
+
+
 
 
 //View departments in table
@@ -147,5 +172,29 @@ const addDepartment = () => {
     startMenu();
   }
 };
+
+//add to role table
+
+const addRoles = () => {
+  inquirer.prompt(rolePrompt)
+  .then((response) => {
+    newRole(response);
+  })
+  const newRole = (data) => {
+    console.log(data)
+    // const {newRole} = data;
+    // const addRole = [newRole]
+    const sql = 'INSERT INTO role SET ?';
+    db.promise().query(sql, (data.title, data.salary, data.department_id))
+    .then(console.log(`${data.title}, ${data.salary}, ${data.department_id} added to database`));
+  }}
+
+
+
+
+
+
+
+
 
 init();
