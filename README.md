@@ -13,10 +13,10 @@ Organize and plan for your business using the Employee Tracker. Add, remove, and
   **[References](#references) <br />
 
 ## Usage
-* Within node, use arrow keys to select function and follow prompts.
+ Within node, use arrow keys to select function and follow prompts.
 
 ## Link to gitHub repository
-* https://github.com/jacef790/EmployeeTracker
+ https://github.com/jacef790/EmployeeTracker
 
 ## Video link
 <a href="https://drive.google.com/file/d/19jTrbWZlDgVMGNwUkRiEJaJD5Dgv86H_/view?usp=sharing">Video</a>
