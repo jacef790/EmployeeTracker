@@ -1,67 +1,123 @@
+const inquirer = require('inquirer');
+const consoleTable = require('console.table');
+
 // get the client
-const mysql = require("mysql2");
-const inquirer = require("inquirer");
-// const { init } = require('express/lib/application');
-const { response } = require("express");
-const Connection = require("mysql2/typings/mysql/lib/Connection");
-const table = require('console.table');
+const mysql = require('mysql2');
+const { response } = require('express');
 
 // create the connection to database
-const db = mysql.createConnection(
-  {
-    host: "localhost",
-    user: "root",
-    password: "squirtleisaturtle",
-    database: "employeetrack_db",
-  },
-  console.log("Employee Tracker Database")
-);
+const db = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: 'squirtleisaturtle',
+  database: 'employeetrack_db'
+},
+  console.log('Database Connected')
+  );
 
-//Question Prompt
+  const menu = {
+    type:'list',
+    message: 'What Would You Like to Do Today?',
+    name: 'menu',
+    choices: [
+      'view all departments',
+      'view all roles',
+      'view all employees',
+      'add a department',
+      'add a role',
+      'add an employee',
+      'update an employee role',
+      'quit'
+    ]
 
-const menu = {
-  type: "list",
-  message: "What Would You Like to Do Today?",
-  name: "menu",
-  choices: [
-    "view all departments",
-    "view all roles",
-    "view all employees",
-    "add a department",
-    "add a role",
-    "add an employee",
-    "update an employee role",
-    "quit"
-  ],
-};
+  };
 
-const init = () => {
-  inquirer.prompt(menu).then((response) => {
-    switch (response.menu) {
-      case "view all departments":
+  //opening card
+
+  const init = () => {
+    console.log('#######################')
+    console.log('#                     #')
+    console.log('#  EMPLOYEE MANAGER   #')
+    console.log('#                     #')
+    console.log('#######################')
+    startMenu();
+  };
+
+  // Initial inquirer menu
+
+  const startMenu = () => {
+    inquirer
+    .prompt(menu).then((response) => {
+      switch(response.menu) {
+      case 'view all departments':
         departments();
         break;
-      case "view all roles":
+      case 'view all roles':
         roles();
         break;
-      case "view all employees":
+      case 'view all employees':
         employees();
         break;
-      case "add a department":
+      case 'add a department':
         addDepartment();
         break;
-      case "add a role":
+      case 'add a role':
         addRoles();
         break;
-      case "add an employee":
+      case 'add an employee':
         addEmployee();
         break;
-      case "update an employee role":
+      case 'update an employee role':
         updateRoles();
         break;
-      case "quit":
+      case 'quit':
         process.exit();
     }
-  });
+  }
+    )
+  }
+
+  //View departments in table
+  
+const departments = () => {
+  const sql = 'SELECT * FROM department';
+
+  db.promise().query(sql)
+  .then(([rows, fields]) => {
+      const table = consoleTable.getTable(rows);
+      console.log(table);
+  })
+  
 };
 
+// view roles in table
+
+const roles = () => {
+  const sql = 'SELECT * FROM role';
+
+  db.promise().query(sql)
+  .then(([rows, fields]) => {
+      const table = consoleTable.getTable(rows);
+      console.log(table);
+  })
+  
+
+// view employees in table
+
+};
+const employees = () => {
+  const sql = 'SELECT * FROM employee';
+
+  db.promise().query(sql)
+  .then(([rows, fields]) => {
+      const table = consoleTable.getTable(rows);
+      console.log(table);
+  })
+  
+};
+
+// add to department table
+
+
+
+init();
