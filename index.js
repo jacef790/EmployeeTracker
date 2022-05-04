@@ -3,14 +3,16 @@ const mysql = require("mysql2");
 const inquirer = require("inquirer");
 // const { init } = require('express/lib/application');
 const { response } = require("express");
+const Connection = require("mysql2/typings/mysql/lib/Connection");
+const table = require('console.table');
 
 // create the connection to database
-const connection = mysql.createConnection(
+const db = mysql.createConnection(
   {
     host: "localhost",
     user: "root",
     password: "squirtleisaturtle",
-    database: "employeeTrack.db",
+    database: "employeetrack_db",
   },
   console.log("Employee Tracker Database")
 );
@@ -29,7 +31,7 @@ const menu = {
     "add a role",
     "add an employee",
     "update an employee role",
-    "quit",
+    "quit"
   ],
 };
 
@@ -63,129 +65,3 @@ const init = () => {
   });
 };
 
-// Inquirer add departmetn
-
-const addDepartment = () => {
-  console.log("-----ADD DEPARTMENT-----");
-
-  return inquirer.prompt([
-    {
-      type: "input",
-      name: "dept",
-      message: "Department Name? (Required)",
-      validate: (departmentName) => {
-        if (departmentName) {
-          return true;
-        } else {
-          console.log("Please enter a department!");
-          return false;
-        }
-      }, 
-    },
-  ]) .then(answers => {
-      console.log(answers);
-  })
-};
-const addRoles = () => {
-  console.log("-----ADD ROLES-----");
-
-  return inquirer.prompt([
-    {
-      type: "input",
-      name: "role",
-      message: "Role Title? (Required)",
-      validate: (roleName) => {
-        if (roleName) {
-          return true;
-        } else {
-          console.log("Please enter a role name!");
-          return false;
-        }
-      },
-    },
-    {
-      type: "input",
-      name: "roleSalary",
-      message: "What is the salary for this role?",
-      validate: (roleSalary) => {
-        if (roleSalary) {
-          return true;
-        } else {
-          console.log("Please enter a salary!");
-          return false;
-        }
-      },
-    },
-    {
-      type: "list",
-      name: "roleDept",
-      message: "What department does this role belong to?",
-      choices: () => {
-        const choices = [];
-        for (let i = 0; i < response.length; i++) {
-          choices.push(response[i].dept);
-        }
-      },
-    },
-  ]);
-};
-const addEmployee = () => {
-  console.log("-----ADD EMPLOYEE-----");
-
-  return inquirer.prompt([
-    {
-      type: "input",
-      name: "firstName",
-      message: "Employee first name? (Required)",
-      validate: (firstName) => {
-        if (firstName) {
-          return true;
-        } else {
-          console.log("Please enter a first name!");
-          return false;
-        }
-      },
-    },
-    {
-      type: "input",
-      name: "lastName",
-      message: "Employee last name? (Required)",
-      validate: (lastName) => {
-        if (lastName) {
-          return true;
-        } else {
-          console.log("Please enter a last name!");
-          return false;
-        }
-      },
-    },
-    // {
-    //     type: 'list',
-    //     name: 'employeeRole',
-    //     message: 'Employee Role? (Required)',
-    //     validate: departmentName => {
-    //         if (departmentName) {
-    //             return true;
-    //         } else {
-    //             console.log('Please enter a first name!');
-    //             return false;
-    //         }
-    //     }
-    // },
-    // {
-    //     type: 'input',
-    //     name: 'firstName',
-    //     message: 'Employee first name? (Required)',
-    //     validate: departmentName => {
-    //         if (departmentName) {
-    //             return true;
-    //         } else {
-    //             console.log('Please enter a first name!');
-    //             return false;
-    //         }
-    //     }
-    // }
-  ]);
-};
-
-init();

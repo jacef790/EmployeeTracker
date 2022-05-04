@@ -1,0 +1,22 @@
+{
+  "name": "employeetracker",
+  "version": "1.0.0",
+  "description": "Organize and plan for your business using the Employee Tracker. Add, remove, and update your: Department, Roles, and Employess within your company.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jacef790/EmployeeTracker.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jacef790/EmployeeTracker/issues"
+  },
+  "homepage": "https://github.com/jacef790/EmployeeTracker#readme",
+  "dependencies": {
+    "console.table": "^0.10.0"
+  }
+}
