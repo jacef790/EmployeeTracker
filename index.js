@@ -81,37 +81,32 @@ const startMenu = () => {
 //add department prompt
 
 const departmentPrompt = {
-  type: 'input',
-  message: 'Name of new department?',
-  name: 'newDepartment'
-
+  type: "input",
+  message: "Name of new department?",
+  name: "newDepartment",
 };
-
 
 //add role prompt
 
-const rolePrompt = [{
-  type: 'input',
-  message: 'Name of new role?',
-  name: 'newRole'
-
-},
-{
-  type: 'number',
-  message: 'Salary of new role?',
-  name: 'newSalary'
-},
-{
-  type: 'input',
-  message: 'What department does this role belong to?',
-  // choices: ['Management', 'Engineering', 'Sales'],
-  name: 'newDepartment_id'
-}];
+const rolePrompt = [
+  {
+    type: "input",
+    message: "Name of new role?",
+    name: "newRole",
+  },
+  {
+    type: "number",
+    message: "Salary of new role?",
+    name: "newSalary",
+  },
+  {
+    type: "list",
+    message: "What department ID does this role belong to?",
+    name: "newDepartment_id",
+  },
+];
 
 //add employee prompt
-
-
-
 
 //View departments in table
 
@@ -125,21 +120,22 @@ const departments = () => {
       console.log(table);
       startMenu();
     });
-    
 };
 
 // view roles in table
 
-const roles = () => {
-  const sql = "SELECT * FROM role";
+const roles = async () => {
+  try {
+    const sql = "SELECT * FROM role";
 
-  db.promise()
-    .query(sql)
-    .then(([rows, fields]) => {
-      const table = consoleTable.getTable(rows);
-      console.log(table);
-      startMenu();
-    });
+    const [rows, fields] = await db.promise().query(sql);
+
+    const table = consoleTable.getTable(rows);
+    console.log(table);
+    startMenu();
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 // view employees in table
@@ -159,42 +155,99 @@ const employees = () => {
 // add to department table
 
 const addDepartment = () => {
-  inquirer.prompt(departmentPrompt)
-  .then((response) => {
+  inquirer.prompt(departmentPrompt).then((response) => {
     newDept(response);
-  })
+  });
   const newDept = (data) => {
-    const {newDepartment} = data;
-    const addDept = [newDepartment]
-    const sql = 'INSERT INTO department (name) VALUES (?)';
-    db.promise().query(sql, addDept)
-    .then(console.log(`${newDepartment} added to database`));
+    const { newDepartment } = data;
+    const addDept = [newDepartment];
+    const sql = "INSERT INTO department (name) VALUES (?)";
+    db.promise()
+      .query(sql, addDept)
+      .then(console.log(`${newDepartment} added to database`));
     startMenu();
-  }
+  };
 };
 
 //add to role table
 
-const addRoles = () => {
-  inquirer.prompt(rolePrompt)
-  .then((response) => {
-    newRole(response);
-  })
-  const newRole = (data) => {
-    console.log(data)
-    // const {newRole} = data;
-    // const addRole = [newRole]
-    const sql = 'INSERT INTO role SET ?';
-    db.promise().query(sql, (data.title, data.salary, data.department_id))
-    .then(console.log(`${data.title}, ${data.salary}, ${data.department_id} added to database`));
-  }}
+const addRoles = async () => {
+  const [departments] = await db
+    .promise()
+    .query("SELECT id AS value, name AS name FROM department");
+  console.log(departments);
+  const rolePrompt = [
+    {
+      type: "input",
+      message: "Name of new role?",
+      name: "newRole",
+    },
+    {
+      type: "number",
+      message: "Salary of new role?",
+      name: "newSalary",
+    },
+    {
+      type: "list",
+      message: "What department ID does this role belong to?",
+      name: "newDepartment_id",
+      choices: departments,
+    },
+  ];
 
+  const data = await inquirer.prompt(rolePrompt);
+  const sql = `INSERT INTO role SET ?`;
+  const [rows, fields] = await db
+    .promise()
+    .query(sql, {
+      title: data.newRole,
+      salary: data.newSalary,
+      department_id: data.newDepartment_id,
+    });
+  console.log(
+    `${data.newRole}, ${data.newSalary}, ${data.newDepartment_id} added to database`
+  );
+  startMenu();
+};
 
+// add employee
 
+const addEmployee = async () => {
+  const [roles] = await db
+    .promise()
+    .query("SELECT id AS value, title AS name FROM role");
+  const [employees] = await db
+    .promise()
+    .query("SELECT id AS value, last_name AS name FROM employee");
 
-
-
-
-
+  const newEmployeePrompt = [
+    {
+      type: "input",
+      message: "First Name",
+      name: "first_name",
+    },
+    {
+      type: 'input',
+      message: 'Last Name',
+      name: 'last_name'
+    },
+    {
+      type: 'list',
+      message: 'What Role Will Employee belong in',
+      name: 'role_id',
+      choices: roles
+    },
+    {
+      type: 'list',
+      message: 'Who is employees manager',
+      name: 'manager_id',
+      choices: employees
+    }
+  ];
+  const newempprompt = await inquirer.prompt(newEmployeePrompt);
+  const [addDb] = await db.promise().query('INSERT INTO employee SET ?', newempprompt)
+  console.log(`employee added`)
+  startMenu();
+};
 
 init();
